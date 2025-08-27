@@ -8,19 +8,18 @@ description = ""
 
 [variables]
 origin = { default = "0568e1a0-45c2-426d-96a4-c455b17cd261.fwf.app" }
-
+correlation_id_header_name = { default = "X-Correlation-Id" }
 [[trigger.http]]
 route = "/..."
 component = "test"
 
 [component.test]
 source = "target/wasm32-wasip1/release/add_correlation_id.wasm"
-environment = { origin = "0568e1a0-45c2-426d-96a4-c455b17cd261.fwf.app" }
 allowed_outbound_hosts = ["https://{{ origin }}"]
 
 [component.test.variables]
 origin = "{{ origin }}"
-
+header_name = "{{ correlation_id_header_name }}"
 [component.test.build]
 command = "cargo build --target wasm32-wasip1 --release"
 watch = ["src/**/*.rs", "Cargo.toml"]

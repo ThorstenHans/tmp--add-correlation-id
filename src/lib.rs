@@ -31,11 +31,14 @@ impl Guest for Component {
         let Ok(origin) = variables::get("origin") else {
             return internal_server_error(response_out);
         };
+        let Ok(header_name) = variables::get("header_name") else {
+            return internal_server_error(response_out);
+        };
 
         let headers = Headers::from(request.headers().clone());
         headers
             .set(
-                &String::from("x-correlation-id"),
+                &header_name,
                 &vec![Uuid::new_v4().to_string().as_bytes().to_vec()],
             )
             .expect("Could not set correlation ID on upstream request");
