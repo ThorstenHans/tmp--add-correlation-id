@@ -1,0 +1,26 @@
+spin_manifest_version = 2
+
+[application]
+name = "test"
+version = "0.1.0"
+authors = ["Thorsten Hans <thorsten.hans@fermyon.com>"]
+description = ""
+
+[variables]
+origin = { default = "0568e1a0-45c2-426d-96a4-c455b17cd261.fwf.app" }
+
+[[trigger.http]]
+route = "/..."
+component = "test"
+
+[component.test]
+source = "target/wasm32-wasip1/release/add_correlation_id.wasm"
+environment = { origin = "0568e1a0-45c2-426d-96a4-c455b17cd261.fwf.app" }
+allowed_outbound_hosts = ["https://{{ origin }}"]
+
+[component.test.variables]
+origin = "{{ origin }}"
+
+[component.test.build]
+command = "cargo build --target wasm32-wasip1 --release"
+watch = ["src/**/*.rs", "Cargo.toml"]
